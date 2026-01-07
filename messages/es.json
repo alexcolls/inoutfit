@@ -1,6 +1,75 @@
 {
   "Home": {
     "title": "InOutfit",
-    "subtitle": "Base lista: tema, i18n, Supabase + Stripe, enfoque API-first."
+    "subtitle": "Generación de promos con IA para outfits."
+  },
+  "Common": {
+    "language": "Idioma",
+    "english": "English",
+    "spanish": "Español",
+    "signedInAs": "Sesión iniciada como {email}",
+    "newCreation": "Nueva creación",
+    "signIn": "Iniciar sesión",
+    "signUp": "Crear cuenta",
+    "signOut": "Cerrar sesión",
+    "footerText": "© {year} InOutfit. Todos los derechos reservados."
+  },
+  "Create": {
+    "titleChooseModel": "Elige tu modelo",
+    "subtitleBusiness": "Crea promos de outfits con IA en minutos. Elige un modelo, sube fotos del outfit y genera assets listos para publicar.",
+    "titleUploadOutfit": "Sube fotos del outfit",
+    "subtitleUploadOutfit": "Haz click en el modelo para elegir imágenes. Conectamos el flujo de subida en el siguiente paso.",
+    "exit": "Salir",
+    "stepModels": "Modelo",
+    "stepOutfit": "Outfit",
+    "stepConfirm": "Confirmar",
+    "modelsTitle": "Elige un modelo",
+    "modelsSubtitle": "Selecciona un modelo para continuar.",
+    "loadError": "No se pudieron cargar los modelos",
+    "emptyTitle": "Aún no hay modelos",
+    "emptyBody": "Sube imágenes al bucket gallery bajo avatars/ para verlas aquí.",
+    "setupTitle": "Falta configurar la galería",
+    "setupBody": "Tu proyecto de Supabase todavía no tiene el bucket gallery.",
+    "setupStep1": "Crea un bucket privado llamado gallery",
+    "setupStep2": "Sube imágenes bajo avatars/ (por ejemplo, avatars/modelo-01.jpg)",
+    "backStep": "Volver",
+    "nextStep": "Siguiente",
+    "uploadTitle": "Sube tus fotos del outfit",
+    "uploadSubtitle": "Haz click en el modelo para elegir imágenes (la subida viene después).",
+    "clickToUpload": "Haz click para elegir imágenes",
+    "filesSelected": "{count} imágenes seleccionadas"
+  },
+  "Auth": {
+    "signIn": {
+      "title": "Iniciar sesión",
+      "description": "Bienvenido/a. Usa tu email o continúa con Google.",
+      "continueWithGoogle": "Continuar con Google",
+      "or": "o",
+      "email": "Email",
+      "password": "Contraseña",
+      "submit": "Iniciar sesión",
+      "submitting": "Iniciando…",
+      "noAccount": "¿No tienes cuenta?",
+      "signUpLink": "Crear cuenta",
+      "genericError": "No se pudo iniciar sesión"
+    },
+    "signUp": {
+      "title": "Crear cuenta",
+      "description": "Empieza a generar promos con un flujo limpio.",
+      "continueWithGoogle": "Continuar con Google",
+      "or": "o",
+      "email": "Email",
+      "password": "Contraseña",
+      "passwordHint": "Mínimo 8 caracteres.",
+      "submit": "Crear cuenta",
+      "submitting": "Creando…",
+      "haveAccount": "¿Ya tienes cuenta?",
+      "signInLink": "Iniciar sesión",
+      "genericError": "No se pudo crear la cuenta"
+    },
+    "signOut": {
+      "button": "Cerrar sesión",
+      "genericError": "No se pudo cerrar sesión"
+    }
   }
 }

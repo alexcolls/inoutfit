@@ -1,6 +1,75 @@
 {
   "Home": {
     "title": "InOutfit",
-    "subtitle": "Foundation setup: theming, i18n, Supabase + Stripe, API-first."
+    "subtitle": "AI promo generation for outfits."
+  },
+  "Common": {
+    "language": "Language",
+    "english": "English",
+    "spanish": "Spanish",
+    "signedInAs": "Signed in as {email}",
+    "newCreation": "New creation",
+    "signIn": "Sign in",
+    "signUp": "Sign up",
+    "signOut": "Sign out",
+    "footerText": "© {year} InOutfit. All rights reserved."
+  },
+  "Create": {
+    "titleChooseModel": "Choose your model",
+    "subtitleBusiness": "Create AI outfit promos in minutes. Pick a model, upload your outfit photos, and generate ready-to-post assets.",
+    "titleUploadOutfit": "Upload outfit photos",
+    "subtitleUploadOutfit": "Click the selected model to choose images. We'll connect the upload workflow next.",
+    "exit": "Exit",
+    "stepModels": "Model",
+    "stepOutfit": "Outfit",
+    "stepConfirm": "Confirm",
+    "modelsTitle": "Choose a model",
+    "modelsSubtitle": "Select one model to continue.",
+    "loadError": "Failed to load models",
+    "emptyTitle": "No models yet",
+    "emptyBody": "Add images to the gallery bucket under avatars/ to see them here.",
+    "setupTitle": "Gallery setup needed",
+    "setupBody": "Your Supabase project does not have the gallery bucket yet.",
+    "setupStep1": "Create a private storage bucket named gallery",
+    "setupStep2": "Upload images under avatars/ (e.g. avatars/model-01.jpg)",
+    "backStep": "Back",
+    "nextStep": "Next",
+    "uploadTitle": "Upload your outfit photos",
+    "uploadSubtitle": "Click the model to pick images (uploading comes next).",
+    "clickToUpload": "Click to choose images",
+    "filesSelected": "{count} images selected"
+  },
+  "Auth": {
+    "signIn": {
+      "title": "Sign in",
+      "description": "Welcome back. Use your email or continue with Google.",
+      "continueWithGoogle": "Continue with Google",
+      "or": "or",
+      "email": "Email",
+      "password": "Password",
+      "submit": "Sign in",
+      "submitting": "Signing in…",
+      "noAccount": "Don't have an account?",
+      "signUpLink": "Sign up",
+      "genericError": "Sign in failed"
+    },
+    "signUp": {
+      "title": "Create account",
+      "description": "Start generating promos with a clean workflow.",
+      "continueWithGoogle": "Continue with Google",
+      "or": "or",
+      "email": "Email",
+      "password": "Password",
+      "passwordHint": "Minimum 8 characters.",
+      "submit": "Create account",
+      "submitting": "Creating…",
+      "haveAccount": "Already have an account?",
+      "signInLink": "Sign in",
+      "genericError": "Sign up failed"
+    },
+    "signOut": {
+      "button": "Sign out",
+      "genericError": "Sign out failed"
+    }
   }
 }
