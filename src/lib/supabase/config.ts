@@ -1,8 +1,19 @@
 export function getSupabaseProjectId() {
-  const id = process.env.NEXT_PUBLIC_SUPABASE_PROJECT_ID;
-  if (!id) {
+  const raw = process.env.NEXT_PUBLIC_SUPABASE_PROJECT_ID;
+  if (!raw) {
     throw new Error('Missing environment variable: NEXT_PUBLIC_SUPABASE_PROJECT_ID');
   }
+
+  const id = raw.trim();
+
+  // Supabase project ref is the subdomain in https://<ref>.supabase.co
+  // Fail fast on common copy/paste mistakes.
+  if (!id || /\s/.test(id) || id.includes('.') || id.includes('/')) {
+    throw new Error(
+      'Invalid NEXT_PUBLIC_SUPABASE_PROJECT_ID (expected the project ref only, e.g. "abcdefghijklmnopqrst")'
+    );
+  }
+
   return id;
 }
 
