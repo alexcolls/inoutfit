@@ -5,6 +5,8 @@ import {getMessages, setRequestLocale} from 'next-intl/server';
 import {notFound} from 'next/navigation';
 
 import '@/app/globals.css';
+import {SiteFooter} from '@/components/layout/site-footer';
+import {SiteHeader} from '@/components/layout/site-header';
 import {ThemeProvider} from '@/components/theme-provider';
 import {routing} from '@/i18n/routing';
 
@@ -49,7 +51,13 @@ export default async function LocaleLayout({children, params}: Props) {
       <body className={`${geistSans.variable} ${geistMono.variable} antialiased`}>
         <ThemeProvider attribute="class" defaultTheme="system" enableSystem disableTransitionOnChange>
           <NextIntlClientProvider locale={locale} messages={messages}>
-            {children}
+            <div className="min-h-dvh">
+              <div className="flex min-h-dvh flex-col">
+                <SiteHeader locale={locale} />
+                <div className="flex flex-1 flex-col">{children}</div>
+                <SiteFooter locale={locale} />
+              </div>
+            </div>
           </NextIntlClientProvider>
         </ThemeProvider>
       </body>
