@@ -1,9 +1,9 @@
 import {createClient} from '@supabase/supabase-js';
 
-import {getSupabaseServiceRoleKey, getSupabaseUrl} from './config';
+import {getSupabaseUrl, requireSupabaseSecretKey} from './config';
 
 export function createSupabaseAdminClient() {
-  return createClient(getSupabaseUrl(), getSupabaseServiceRoleKey(), {
+  return createClient(getSupabaseUrl(), requireSupabaseSecretKey(), {
     auth: {
       autoRefreshToken: false,
       persistSession: false

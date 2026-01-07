@@ -11,9 +11,19 @@ export async function middleware(request: NextRequest) {
   const response = intlMiddleware(request);
 
   // Then ensure Supabase sessions are refreshed via cookies.
+  const projectId = process.env.NEXT_PUBLIC_SUPABASE_PROJECT_ID;
+  const publishableKey = process.env.NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY;
+
+  if (!projectId) {
+    throw new Error('Missing NEXT_PUBLIC_SUPABASE_PROJECT_ID');
+  }
+  if (!publishableKey) {
+    throw new Error('Missing NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY');
+  }
+
   const supabase = createServerClient(
-    process.env.NEXT_PUBLIC_SUPABASE_URL!,
-    process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
+    `https://${projectId}.supabase.co`,
+    publishableKey,
     {
       cookies: {
         getAll() {

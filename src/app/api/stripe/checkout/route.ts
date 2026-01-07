@@ -64,12 +64,8 @@ export const POST = withRequestLogging('stripe.checkout.post', async (request: R
 
   const mode = parsed.data.mode;
 
-  const successUrl =
-    process.env.STRIPE_SUCCESS_URL ??
-    `${siteUrl}/${routing.defaultLocale}/billing/success?session_id={CHECKOUT_SESSION_ID}`;
-  const cancelUrl =
-    process.env.STRIPE_CANCEL_URL ??
-    `${siteUrl}/${routing.defaultLocale}/billing/cancel`;
+  const successUrl = `${siteUrl}/${routing.defaultLocale}/billing/success?session_id={CHECKOUT_SESSION_ID}`;
+  const cancelUrl = `${siteUrl}/${routing.defaultLocale}/billing/cancel`;
 
   const customer = await getOrCreateStripeCustomerId({
     supabaseUserId: userData.user.id,
@@ -95,24 +91,6 @@ export const POST = withRequestLogging('stripe.checkout.post', async (request: R
   const entitlements = await getBillingEntitlementsForUser(userData.user.id);
 
   // Prefer dynamic pricing so we can apply % discounts without managing Stripe coupons.
-  // If STRIPE_PROMO_UNIT_AMOUNT is not set, fall back to STRIPE_ONE_TIME_PRICE_ID.
-  const currency = process.env.STRIPE_PROMO_CURRENCY;
-  const unitAmountRaw = process.env.STRIPE_PROMO_UNIT_AMOUNT;
-
-  if (!currency || !unitAmountRaw) {
-    const session = await stripe.checkout.sessions.create({
-      mode,
-      customer,
-      line_items: [{price: requireEnv('STRIPE_ONE_TIME_PRICE_ID'), quantity: 1}],
-      success_url: successUrl,
-      cancel_url: cancelUrl,
-      metadata: {
-        supabase_user_id: userData.user.id
-      }
-    });
-
-    return ok({url: session.url});
-  }
 
   const baseAmount = getPromoUnitAmount();
   const discountPercent = entitlements.isPremium ? getPromoDiscountPercent() : 0;

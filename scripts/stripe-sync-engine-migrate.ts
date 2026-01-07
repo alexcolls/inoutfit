@@ -6,11 +6,6 @@ function requireEnv(name: string): string {
   return value;
 }
 
-function getDatabaseSslConfig(): Record<string, unknown> {
-  const ca = process.env.SUPABASE_DATABASE_SSL_CA;
-  if (ca && ca.trim().length > 0) return {ca};
-  return {rejectUnauthorized: false};
-}
 
 async function main() {
   const databaseUrl = requireEnv('SUPABASE_DATABASE_URL');
@@ -26,7 +21,7 @@ async function main() {
     poolConfig: {
       connectionString: databaseUrl,
       max: 3,
-      ssl: getDatabaseSslConfig()
+      ssl: {rejectUnauthorized: false}
     }
   });
 
