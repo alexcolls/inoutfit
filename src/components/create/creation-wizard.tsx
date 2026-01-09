@@ -42,6 +42,26 @@ export function CreationWizard({locale}: Props) {
 
   const [clothesOpen, setClothesOpen] = React.useState(false)
 
+  const [videoLoading, setVideoLoading] = React.useState(false)
+  const [videoError, setVideoError] = React.useState<string | null>(null)
+  const [videoUrl, setVideoUrl] = React.useState<string | null>(null)
+  const [videoPath, setVideoPath] = React.useState<string | null>(null)
+
+  type PhotoshootSlot = {
+    status: 'idle' | 'loading' | 'done' | 'error'
+    image?: {path: string; signedUrl: string}
+    error?: string
+  }
+
+  const [photoshootSlots, setPhotoshootSlots] = React.useState<PhotoshootSlot[]>([
+    {status: 'idle'},
+    {status: 'idle'},
+    {status: 'idle'},
+  ])
+
+  const photoshootRequestKey = `${selectedPath ?? ''}|${currentModelPath ?? ''}`
+  const photoshootLastKeyRef = React.useRef<string | null>(null)
+
   const isStep1Complete = Boolean(selectedPath)
 
   // Step 2 is complete once we have generated at least one try-on output (stored in users bucket).
@@ -119,6 +139,87 @@ export function CreationWizard({locale}: Props) {
   React.useEffect(() => {
     if (step === 2) setClothesOpen(true)
   }, [step])
+
+  const generatePhotoshootShot = React.useCallback(
+    async (shot: 1 | 2 | 3) => {
+      if (!selectedPath || !currentModelPath) return
+
+      const idx = shot - 1
+      setPhotoshootSlots((prev) => {
+        const next = [...prev]
+        next[idx] = {status: 'loading'}
+        return next
+      })
+
+      try {
+        const res = await fetch('/api/clothes/photoshoot', {
+          method: 'POST',
+          headers: {'Content-Type': 'application/json'},
+          body: JSON.stringify({avatarPath: selectedPath, baseModelPath: currentModelPath, shot}),
+        })
+
+        const json = (await res.json().catch(() => null)) as ApiResponse<
+          {shot: number; image: {path: string; signedUrl: string}}
+        > | null
+
+        if (!res.ok) {
+          const msg = json && 'error' in json ? json.error : t('photoshootError')
+          setPhotoshootSlots((prev) => {
+            const next = [...prev]
+            next[idx] = {status: 'error', error: msg}
+            return next
+          })
+          return
+        }
+
+        const data = json && 'data' in json ? json.data : null
+        const img = data?.image
+        if (!img?.signedUrl || !img?.path) {
+          const msg = t('photoshootError')
+          setPhotoshootSlots((prev) => {
+            const next = [...prev]
+            next[idx] = {status: 'error', error: msg}
+            return next
+          })
+          return
+        }
+
+        setPhotoshootSlots((prev) => {
+          const next = [...prev]
+          next[idx] = {status: 'done', image: img}
+          return next
+        })
+      } catch {
+        const msg = t('photoshootError')
+        setPhotoshootSlots((prev) => {
+          const next = [...prev]
+          next[idx] = {status: 'error', error: msg}
+          return next
+        })
+      }
+    },
+    [currentModelPath, selectedPath, t]
+  )
+
+  // Auto-generate photoshoot images once we enter step 3.
+  React.useEffect(() => {
+    if (step !== 3) return
+    if (!selectedPath || !currentModelPath) return
+
+    if (photoshootLastKeyRef.current === photoshootRequestKey) return
+    photoshootLastKeyRef.current = photoshootRequestKey
+
+    // Reset state for a new outfit.
+    setPhotoshootSlots([{status: 'idle'}, {status: 'idle'}, {status: 'idle'}])
+    setVideoUrl(null)
+    setVideoPath(null)
+    setVideoError(null)
+
+    // Fire independent requests so results appear as soon as each finishes.
+    void generatePhotoshootShot(1)
+    void generatePhotoshootShot(2)
+    void generatePhotoshootShot(3)
+  }, [step, selectedPath, currentModelPath, photoshootRequestKey, generatePhotoshootShot])
 
   function baseName(filename: string) {
     const last = filename.split('/').pop() ?? filename
@@ -338,26 +439,164 @@ export function CreationWizard({locale}: Props) {
             <p className="mt-1 text-sm text-muted-foreground">{t('confirmSubtitle')}</p>
           </div>
 
-          <div className="mt-8 grid gap-4 sm:grid-cols-2">
-            <div className="rounded-xl border bg-card p-2">
-              <div className="relative aspect-9/16 overflow-hidden rounded-lg">
-                <img
-                  src={currentModelUrl ?? ''}
-                  alt={selectedPath ? baseName(selectedPath) : ''}
-                  className="h-full w-full object-cover"
-                />
+          <div className="mx-auto mt-8 max-w-5xl">
+            <div className="grid grid-cols-2 gap-3 md:grid-cols-4">
+              <div className="rounded-xl border bg-card p-2">
+                <div className="relative aspect-9/16 overflow-hidden rounded-lg">
+                  <img
+                    src={currentModelUrl ?? ''}
+                    alt={selectedPath ? baseName(selectedPath) : ''}
+                    className="h-full w-full object-cover"
+                  />
+                </div>
+                <p className="mt-2 text-center text-xs text-muted-foreground">{t('finalOutfit')}</p>
               </div>
-              <p className="mt-2 text-center text-sm text-muted-foreground">{t('finalOutfit')}</p>
+
+              {photoshootSlots.map((slot, i) => {
+                const shot = (i + 1) as 1 | 2 | 3
+
+                return (
+                  <div key={i} className="rounded-xl border bg-card p-2">
+                    <div
+                      className={
+                        'relative aspect-9/16 overflow-hidden rounded-lg ' +
+                        (slot.status === 'done'
+                          ? ''
+                          : slot.status === 'loading'
+                            ? 'animate-pulse bg-muted/40'
+                            : slot.status === 'error'
+                              ? 'border border-dashed border-destructive/60 bg-muted/10'
+                              : 'border border-dashed bg-muted/20')
+                      }
+                    >
+                      {slot.status === 'done' && slot.image ? (
+                        <img
+                          src={slot.image.signedUrl}
+                          alt={t('photoshootPlaceholder', {n: i + 1})}
+                          className="h-full w-full object-cover"
+                        />
+                      ) : null}
+
+                      {slot.status === 'error' ? (
+                        <div className="absolute inset-0 grid place-items-center p-3 text-center">
+                          <div className="space-y-2">
+                            <p className="text-xs text-destructive">
+                              {slot.error ?? t('photoshootError')}
+                            </p>
+                            <Button
+                              type="button"
+                              size="sm"
+                              variant="outline"
+                              onClick={() => void generatePhotoshootShot(shot)}
+                            >
+                              {t('photoshootRetry')}
+                            </Button>
+                          </div>
+                        </div>
+                      ) : null}
+                    </div>
+
+                    <p className="mt-2 text-center text-xs text-muted-foreground">
+                      {slot.status === 'loading'
+                        ? t('photoshootGenerating')
+                        : t('photoshootPlaceholder', {n: i + 1})}
+                    </p>
+                  </div>
+                )
+              })}
             </div>
 
-            {Array.from({length: 3}).map((_, i) => (
-              <div key={i} className="rounded-xl border border-dashed bg-card p-2">
-                <div className="relative aspect-9/16 overflow-hidden rounded-lg bg-muted/30" />
-                <p className="mt-2 text-center text-sm text-muted-foreground">
-                  {t('photoshootPlaceholder', {n: i + 1})}
-                </p>
+            <div className="mt-8 rounded-xl border bg-card p-4">
+              <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+                <div>
+                  <h3 className="text-sm font-semibold">{t('videoTitle')}</h3>
+                  <p className="text-sm text-muted-foreground">{t('videoSubtitle')}</p>
+                </div>
+
+                <Button
+                  type="button"
+                  disabled={
+                    videoLoading ||
+                    !selectedPath ||
+                    !currentModelPath ||
+                    photoshootSlots[2]?.status !== 'done' ||
+                    !photoshootSlots[2]?.image?.path
+                  }
+                  onClick={async () => {
+                    if (!selectedPath || !currentModelPath) return
+                    const endPath = photoshootSlots[2]?.image?.path
+                    if (!endPath) return
+
+                    setVideoLoading(true)
+                    setVideoError(null)
+
+                    try {
+                      const res = await fetch('/api/clothes/video', {
+                        method: 'POST',
+                        headers: {'Content-Type': 'application/json'},
+                        body: JSON.stringify({
+                          avatarPath: selectedPath,
+                          startPath: currentModelPath,
+                          endPath,
+                        }),
+                      })
+
+                      const json = (await res.json().catch(() => null)) as ApiResponse<
+                        {path: string; signedUrl: string}
+                      > | null
+
+                      if (!res.ok) {
+                        const msg = json && 'error' in json ? json.error : t('videoError')
+                        setVideoError(msg)
+                        return
+                      }
+
+                      const data = json && 'data' in json ? json.data : null
+                      if (!data?.signedUrl || !data?.path) {
+                        setVideoError(t('videoError'))
+                        return
+                      }
+
+                      setVideoUrl(data.signedUrl)
+                      setVideoPath(data.path)
+                    } catch {
+                      setVideoError(t('videoError'))
+                    } finally {
+                      setVideoLoading(false)
+                    }
+                  }}
+                >
+                  {videoLoading ? t('videoGenerating') : t('videoGenerate')}
+                </Button>
               </div>
-            ))}
+
+              {videoError ? <p className="mt-3 text-sm text-destructive">{videoError}</p> : null}
+
+              {videoUrl ? (
+                <div className="mt-4">
+                  <div className="mx-auto max-w-sm overflow-hidden rounded-lg border bg-muted/10">
+                    <div className="relative aspect-9/16">
+                      <video
+                        src={videoUrl}
+                        controls
+                        playsInline
+                        className="h-full w-full object-cover"
+                      />
+                    </div>
+                  </div>
+
+                  {videoPath ? (
+                    <p className="mt-2 text-center text-xs text-muted-foreground">
+                      {t('videoReady')}
+                    </p>
+                  ) : null}
+                </div>
+              ) : null}
+
+              {photoshootSlots[2]?.status !== 'done' ? (
+                <p className="mt-3 text-sm text-muted-foreground">{t('videoHint')}</p>
+              ) : null}
+            </div>
           </div>
         </section>
       )}
