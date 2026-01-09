@@ -1,0 +1,13 @@
+model: fal-ai/wan/v2.2-a14b/image-to-video
+prompt: |
+  Fashion film, high-end clothing store promo.
+
+  [Identity Lock - CRITICAL]: Preserve the exact same person/identity from the reference frames. Do NOT change face shape, eyes, nose, lips, jawline, hairstyle, hair color, skin tone, body type, proportions, age, or ethnicity. No face swap, no beautification, no body reshaping.
+  Keep the same clothing and styling exactly as in the reference frames.
+  Natural confident movement with flow: subtle breathing, gentle weight shift, soft hip sway, slight step, fabric and hair flow.
+  Tasteful, subtly sensual (no nudity): elegant expression, relaxed shoulders.
+  Camera movement: smooth gimbal, slow orbit/arc around the model (camera rotation), dolly in then dolly out, gentle zoom in/zoom out, slight parallax.
+  Cinematic lighting, clean studio lookbook aesthetic, sharp focus, realistic textures.
+  Keep the outfit identical to the reference frames. No extra accessories. No text or logos.
+  Start from the first frame and smoothly transition to match the end frame.
+  Subject: [AVATAR_DESCRIPTION].
