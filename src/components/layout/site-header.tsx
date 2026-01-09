@@ -18,19 +18,20 @@ export async function SiteHeader({locale}: {locale: string}) {
   return (
     <header className="border-b bg-background/70 backdrop-blur">
       <div className="mx-auto flex h-16 w-full max-w-6xl items-center justify-between gap-3 px-4 sm:px-6 lg:px-8">
-        <Link href={`/${locale}`} className="font-semibold tracking-tight">
+        <Link href={`/${locale}`} className="font-bold tracking-tight text-2xl">
           InOutfit
         </Link>
 
         <div className="flex items-center gap-2">
-          <LocaleSwitcher locale={locale} />
 
-          <Button asChild variant="outline">
-            <Link href={`/${locale}/creations/new`}>{t('newCreation')}</Link>
-          </Button>
 
           {user ? (
-            <SignOutButton locale={locale} variant="outline" showError={false} />
+            <>
+              <Button asChild variant="outline">
+                <Link href={`/${locale}/creations/new`}>{t('newCreation')}</Link>
+              </Button>
+              <SignOutButton locale={locale} variant="outline" showError={false} />
+            </>
           ) : (
             <>
               <Button asChild variant="outline">
@@ -42,6 +43,7 @@ export async function SiteHeader({locale}: {locale: string}) {
             </>
           )}
 
+          <LocaleSwitcher locale={locale} />
           <ThemeToggle />
         </div>
       </div>
