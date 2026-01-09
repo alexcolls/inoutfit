@@ -1,0 +1,27 @@
+model: fal-ai/bagel/understand
+prompt: |
+  Analyze the image to determine if it is a valid "Ghost Mannequin" or "Flat Lay" product shot. Return ONLY a JSON object.
+
+  Allowed Menu: ["t-shirt", "shirt", "sweater", "jacket", "coat", "pants", "shorts", "skirt", "dress", "hat", "shoes", "bag", "glasses"]
+
+  STRICT EVALUATION ORDER (Execute in this order):
+
+  1. HUMAN CHECK (Critical):
+    - Are there ANY visible body parts (hands, neck, face, feet, hair)?
+    - Is there a model wearing the clothes?
+    - IF YES to either -> STOP. Return { "response": false, "type": "none" }
+
+  2. BORDER & VISIBILITY CHECK:
+    - Is the item cut off by the image frame (truncated)?
+    - Is the item obscured by another object?
+    - IF YES -> STOP. Return { "response": false, "type": "none" }
+
+  3. QUANTITY CHECK:
+    - Count the distinct items from the Allowed Menu.
+    - IF COUNT != 1 (e.g., shirt + pants, or shirt + bag) -> STOP. Return { "response": false, "type": "none" }
+
+  4. CLASSIFICATION (Only if steps 1-3 pass):
+    - Identify the single item.
+    - Return { "response": true, "type": "[item name from Allowed Menu]" }
+
+  Return only the JSON.
