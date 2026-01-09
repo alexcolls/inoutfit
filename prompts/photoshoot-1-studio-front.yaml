@@ -1,0 +1,13 @@
+model: fal-ai/nano-banana-pro/edit
+prompt: |
+  [Instruction/Description]: Use the input image as reference. Create a photorealistic commercial lookbook photo of [AVATAR_DESCRIPTION] wearing the exact same outfit shown in the reference image.
+
+  [Shot]: Full-body, front-facing, standing pose, centered composition, feet visible.
+
+  [Environment]: Clean seamless studio backdrop (soft white / light gray), no props.
+
+  [Lighting]: Softbox studio lighting, natural skin tones, soft shadows, sharp focus.
+
+  [Quality]: High-end e-commerce photography, realistic fabric folds and textures, accurate colors.
+
+  [Constraints]: Keep the outfit identical (no design changes). No extra garments, no accessories, no text, no watermarks, no logos, no background clutter.

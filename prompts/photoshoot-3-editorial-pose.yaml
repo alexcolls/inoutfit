@@ -1,0 +1,13 @@
+model: fal-ai/nano-banana-pro/edit
+prompt: |
+  [Instruction/Description]: Use the input image as reference. Create a photorealistic commercial fashion photo of [AVATAR_DESCRIPTION] wearing the exact same outfit shown in the reference image.
+
+  [Shot]: Full-body, slight walking pose (one foot forward) OR a subtle step/turn, natural arms, centered composition, feet visible.
+
+  [Environment]: Clean studio backdrop (neutral warm gray) with a gentle vignette, no props.
+
+  [Lighting]: Editorial studio lighting with soft contrast, gentle rim light, realistic shadows, sharp focus.
+
+  [Quality]: Premium clothing store gallery image, high detail, accurate colors, realistic fabric drape.
+
+  [Constraints]: Outfit must remain identical to the reference. No added accessories, no text, no watermarks, no logos, no background objects.

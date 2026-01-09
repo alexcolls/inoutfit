@@ -1,0 +1,7 @@
+model: fal-ai/nano-banana-pro/edit
+prompt: |
+  [Instruction/Description]: A photorealistic photo of [AVATAR_DESCRIPTION] wearing a [CLOTH_TYPE].
+
+  [Details]: The [CLOTH_TYPE] is fitted to the body, natural fabric folds, realistic texture, soft shadowing, studio lighting.
+
+  [Style]: 1k resolution, cinematic lighting, commercial photography, sharp focus.
