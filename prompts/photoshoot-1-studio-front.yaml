@@ -1,13 +1,19 @@
 model: fal-ai/nano-banana-pro/edit
 prompt: |
-  [Instruction/Description]: Use the input image as reference. Create a photorealistic commercial lookbook photo of [AVATAR_DESCRIPTION] wearing the exact same outfit shown in the reference image.
+  [Instruction/Description]: Use the provided reference image(s) as identity + outfit reference. Create a photorealistic commercial lookbook photo of [AVATAR_DESCRIPTION] wearing the exact same outfit shown in the reference image.
 
-  [Shot]: Full-body, front-facing, standing pose, centered composition, feet visible.
+  [Identity Lock - CRITICAL]: Preserve the exact same person/identity as the reference. Do NOT change face shape, eyes, nose, lips, jawline, hairstyle, hair color, skin tone, body type, proportions, age, or ethnicity. No face swap, no beautification, no body reshaping.
+  If multiple reference images are provided: use the FIRST image primarily for identity (face/body), and the SECOND image primarily for outfit/styling.
+
+  [Pose]: Natural, confident, subtly sensual (tasteful). Small hip shift, relaxed shoulders. One hand lightly touching hair or resting near the neck/jawline. Natural expression.
+
+  [Shot]: Full-body, front-facing, centered composition, feet visible.
 
   [Environment]: Clean seamless studio backdrop (soft white / light gray), no props.
 
   [Lighting]: Softbox studio lighting, natural skin tones, soft shadows, sharp focus.
 
-  [Quality]: High-end e-commerce photography, realistic fabric folds and textures, accurate colors.
+  [Quality]: High-end clothing store gallery, realistic fabric folds and textures, accurate colors.
 
-  [Constraints]: Keep the outfit identical (no design changes). No extra garments, no accessories, no text, no watermarks, no logos, no background clutter.
+  [Constraints]: Keep the outfit identical (no design changes). Do not add or remove garments. No extra accessories. No text, no watermarks, no logos, no background clutter.
+  [Safety]: No nudity. Keep it tasteful and suitable for an online clothing store.
