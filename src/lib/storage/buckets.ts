@@ -4,7 +4,8 @@ export const GALLERY_BUCKET = 'gallery';
 export const USER_ASSET_PREFIXES = {
   outfits: 'outfits',
   avatars: 'avatars',
-  outputs: 'outputs'
+  outputs: 'outputs',
+  clothes: 'clothes'
 } as const;
 
 export type UserAssetPrefix = (typeof USER_ASSET_PREFIXES)[keyof typeof USER_ASSET_PREFIXES];
